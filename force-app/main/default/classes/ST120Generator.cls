@@ -15,6 +15,13 @@
  * Work Order lookup API name differs from what was confirmed against prod on
  * 2026-07-07.
  *
+ * HVAC-317 — Work Order tax exempt fields (2026-07-14)
+ * -----------------------------------------------------
+ * Tax-exempt fields moved from PO to WorkOrder. POs inherit from WO by default.
+ * When PO.Override_Tax_Exempt__c is true, the PO uses its own field values.
+ * The delivery mode, contact email, and contact name remain PO-specific (each
+ * vendor/PO may have different delivery preferences).
+ *
  * Invocable member names/labels on GenerateRequest (e.g. "orderId" / "Order ID")
  * are UNCHANGED from the Order-based version so the existing Screen Flow that
  * calls this action does not need to be touched. They now carry Purchase Order
@@ -82,7 +89,12 @@ public with sharing class ST120Generator {
         // Purchase Order Name and Id, respectively.
         public String orderNumber { get; set; }
         public Id orderId { get; set; }
+        public Id vendorId { get; set; }
+        public Id workOrderId { get; set; }
+        public Id exemptOrgId { get; set; }
         public String fileName { get; set; }
+        public Boolean isOverride { get; set; }
+        public String dataSourceLabel { get; set; }
     }
 
     /**
@@ -116,13 +128,19 @@ public with sharing class ST120Generator {
                    Tax_Exempt_Purchase__c, Cert_Delivery_Mode__c,
                    Tax_Exempt_Contact_Email__c, Tax_Exempt_Contact_Name__c,
                    Prime_Contract_Date__c,
+                   Exemption_Reason__c,
+                   Override_Tax_Exempt__c,
                    Work_Order__c,
                    Work_Order__r.WorkOrderNumber,
                    Work_Order__r.WorkTypeId, Work_Order__r.WorkType.Name,
                    Work_Order__r.Project__c, Work_Order__r.Project__r.Name,
                    Work_Order__r.AccountId, Work_Order__r.Account.Name,
                    Work_Order__r.Street, Work_Order__r.City,
-                   Work_Order__r.State, Work_Order__r.PostalCode
+                   Work_Order__r.State, Work_Order__r.PostalCode,
+                   // HVAC-317: WO tax exempt fields for inheritance
+                   Work_Order__r.Tax_Exempt_Purchase__c,
+                   Work_Order__r.Exemption_Reason__c,
+                   Work_Order__r.Prime_Contract_Date__c
             FROM AcctSeedERP__Purchase_Order__c
             WHERE Id = :orderId
             LIMIT 1
@@ -181,21 +199,50 @@ public with sharing class ST120Generator {
             data.exemptOrgName = po.AcctSeedERP__Vendor__r.Name;
         }
 
-        if (po.Prime_Contract_Date__c != null) {
+        // HVAC-317: PO Override logic — when Override_Tax_Exempt__c is checked,
+        // PO uses its own values; otherwise values are inherited from the Work Order.
+        Boolean isOverride = po.Override_Tax_Exempt__c == true;
+        data.isOverride = isOverride;
+
+        // Prime Contract Date — WO default, PO override, fallback to CreatedDate
+        if (isOverride && po.Prime_Contract_Date__c != null) {
             data.primeContractDate = po.Prime_Contract_Date__c.format();
+        } else if (wo != null && wo.Prime_Contract_Date__c != null) {
+            data.primeContractDate = wo.Prime_Contract_Date__c.format();
         } else {
-            // Purchase Order has no EffectiveDate equivalent; fall back to CreatedDate.
             data.primeContractDate = po.CreatedDate.date().format();
         }
 
+        // Exemption Reason — WO default, PO override, fallback to Box A
+        String effectiveReason = isOverride ? po.Exemption_Reason__c : (wo?.Exemption_Reason__c);
         data.exemptionReasonBox = 'A';
-        data.exemptionReasonText = 'Tax Law §1116(a) — Exempt Organization';
+        if (String.isNotBlank(effectiveReason)) {
+            String er = effectiveReason;
+            if (er.length() >= 1) {
+                data.exemptionReasonBox = er.substring(0, 1).toUpperCase();
+            }
+        }
+        data.exemptionReasonText = effectiveReason ?? 'A - Capital Improvement';
+
+        // Data source label for VF page display
+        if (isOverride) {
+            data.dataSourceLabel = 'Values from Purchase Order (override)';
+        } else if (wo != null) {
+            data.dataSourceLabel = 'Values inherited from Work Order';
+        } else {
+            data.dataSourceLabel = 'Default values (no Work Order linked)';
+        }
         data.signerName = formConfig?.Authorized_Signer_Name__c ?? 'Michael Herman';
         data.signerTitle = formConfig?.Authorized_Signer_Title__c ?? 'President';
         data.generationDate = Date.today().format();
         data.formVersion = formConfig?.Form_Version_Date__c ?? '5/24';
         data.orderNumber = po.Name;
         data.orderId = po.Id;
+        data.vendorId = po.AcctSeedERP__Vendor__c;
+        data.workOrderId = po.Work_Order__c;
+        if (po.Work_Order__r != null && po.Work_Order__r.AccountId != null) {
+            data.exemptOrgId = po.Work_Order__r.AccountId;
+        }
         data.fileName = 'ST120_' + cleanFileName(po.AcctSeedERP__Vendor__r.Name) + '_' + po.Name + '_' + Date.today().format().replace('/', '-') + '.pdf';
         return data;
     }

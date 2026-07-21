@@ -48,6 +48,8 @@ private class ST120GeneratorExtensionTest {
         Assert.isNotNull(ext.primeContractDate);
         Assert.areEqual(po.Name, ext.orderNumber);
         Assert.areEqual('A', ext.exemptionReasonBox);
+        Assert.isNotNull(ext.dataSourceLabel, 'dataSourceLabel should be populated');
+        Assert.isFalse(ext.isOverride, 'isOverride should be false by default');
     }
 
     @isTest
@@ -101,5 +103,7 @@ private class ST120GeneratorExtensionTest {
         Assert.isNotNull(ext.exemptionReasonBox);
         Assert.isNotNull(ext.signerName);
         Assert.isNotNull(ext.signerTitle);
+        Assert.isNotNull(ext.dataSourceLabel);
+        Assert.isFalse(ext.isOverride);
     }
 }

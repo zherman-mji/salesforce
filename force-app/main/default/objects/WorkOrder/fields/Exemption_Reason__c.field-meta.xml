@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Exemption_Reason__c</fullName>
+    <label>Exemption Reason</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>A - Capital Improvement</fullName>
+                <default>true</default>
+                <label>A - Capital Improvement</label>
+            </value>
+            <value>
+                <fullName>B - Building or Construction</fullName>
+                <default>false</default>
+                <label>B - Building or Construction</label>
+            </value>
+            <value>
+                <fullName>C - Manufacturing</fullName>
+                <default>false</default>
+                <label>C - Manufacturing</label>
+            </value>
+            <value>
+                <fullName>D - Farming</fullName>
+                <default>false</default>
+                <label>D - Farming</label>
+            </value>
+            <value>
+                <fullName>E - Commercial Fishing</fullName>
+                <default>false</default>
+                <label>E - Commercial Fishing</label>
+            </value>
+            <value>
+                <fullName>F - Industrial</fullName>
+                <default>false</default>
+                <label>F - Industrial</label>
+            </value>
+            <value>
+                <fullName>G - Utility</fullName>
+                <default>false</default>
+                <label>G - Utility</label>
+            </value>
+            <value>
+                <fullName>H - Promotional</fullName>
+                <default>false</default>
+                <label>H - Promotional</label>
+            </value>
+            <value>
+                <fullName>I - Residential</fullName>
+                <default>false</default>
+                <label>I - Residential</label>
+            </value>
+            <value>
+                <fullName>J - Educational</fullName>
+                <default>false</default>
+                <label>J - Educational</label>
+            </value>
+            <value>
+                <fullName>K - Government</fullName>
+                <default>false</default>
+                <label>K - Government</label>
+            </value>
+            <value>
+                <fullName>L - Religious</fullName>
+                <default>false</default>
+                <label>L - Religious</label>
+            </value>
+            <value>
+                <fullName>M - Charitable</fullName>
+                <default>false</default>
+                <label>M - Charitable</label>
+            </value>
+            <value>
+                <fullName>N - Other</fullName>
+                <default>false</default>
+                <label>N - Other</label>
+            </value>
+            <value>
+                <fullName>O - Other A</fullName>
+                <default>false</default>
+                <label>O - Other A</label>
+            </value>
+            <value>
+                <fullName>P - Other B</fullName>
+                <default>false</default>
+                <label>P - Other B</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

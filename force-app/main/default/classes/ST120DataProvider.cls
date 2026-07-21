@@ -10,6 +10,9 @@
  * AcctSeedERP__Purchase_Order__c. The `orderIds` parameter and this class's
  * @InvocableVariable member names/labels are UNCHANGED for Screen Flow
  * compatibility — they carry Purchase Order Ids now, not Order Ids.
+ *
+ * HVAC-317 (2026-07-14): added dataSourceLabel and isOverride fields for
+ * WO-level tax exempt inheritance support.
  */
 public with sharing class ST120DataProvider {
 
@@ -46,6 +49,8 @@ public with sharing class ST120DataProvider {
         output.signerTitle = data.signerTitle;
         output.formVersion = data.formVersion;
         output.fileName = data.fileName;
+        output.dataSourceLabel = data.dataSourceLabel;
+        output.isOverride = data.isOverride;
         return output;
     }
 
@@ -89,5 +94,9 @@ public with sharing class ST120DataProvider {
         public String formVersion;
         @InvocableVariable(label='File Name')
         public String fileName;
+        @InvocableVariable(label='Data Source Label')
+        public String dataSourceLabel;
+        @InvocableVariable(label='Is Override')
+        public Boolean isOverride;
     }
 }
