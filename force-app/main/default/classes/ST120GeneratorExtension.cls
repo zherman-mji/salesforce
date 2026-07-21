@@ -35,6 +35,8 @@ public with sharing class ST120GeneratorExtension {
     public String additionalInfo { get { return certData.additionalInfo; } }
     public String formVersion { get { return certData.formVersion; } }
     public String orderNumber { get { return certData.orderNumber; } }
+    public String dataSourceLabel { get { return certData.dataSourceLabel; } }
+    public Boolean isOverride { get { return certData.isOverride; } }
 
     public ST120GeneratorExtension(ApexPages.StandardController stdController) {
         Id recordId = stdController.getId();

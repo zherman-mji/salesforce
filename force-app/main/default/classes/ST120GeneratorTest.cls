@@ -27,7 +27,8 @@ private class ST120GeneratorTest {
                    Work_Order__c, Work_Order__r.AccountId, Work_Order__r.Account.Name,
                    Work_Order__r.Street, Work_Order__r.City, Work_Order__r.State,
                    Work_Order__r.PostalCode, Work_Order__r.WorkTypeId, Work_Order__r.WorkType.Name,
-                   Work_Order__r.Project__c, Work_Order__r.Project__r.Name
+                   Work_Order__r.Project__c, Work_Order__r.Project__r.Name,
+                   Exemption_Reason__c
             FROM AcctSeedERP__Purchase_Order__c
             WHERE Work_Order__c != null
             LIMIT 1
@@ -36,7 +37,8 @@ private class ST120GeneratorTest {
 
     private static AcctSeedERP__Purchase_Order__c findPoWithoutWorkOrder() {
         return [
-            SELECT Id, Name, AcctSeedERP__Vendor__c, AcctSeedERP__Vendor__r.Name
+            SELECT Id, Name, AcctSeedERP__Vendor__c, AcctSeedERP__Vendor__r.Name,
+                   Exemption_Reason__c
             FROM AcctSeedERP__Purchase_Order__c
             WHERE Work_Order__c = null
             LIMIT 1
@@ -61,6 +63,9 @@ private class ST120GeneratorTest {
         Assert.isNotNull(data.jobSiteAddress);
         Assert.isNotNull(data.exemptOrgName);
         Assert.isNotNull(data.formVersion);
+        Assert.isNotNull(data.dataSourceLabel, 'dataSourceLabel should be populated');
+        Assert.isFalse(data.isOverride, 'Default (no override) should set isOverride to false');
+        Assert.isTrue(data.dataSourceLabel.contains('Work Order'), 'With WO linked, dataSourceLabel should reference Work Order');
     }
 
     @isTest
@@ -79,6 +84,9 @@ private class ST120GeneratorTest {
         Assert.areEqual('HVAC Services and Repairs', data.projectDescription);
         Assert.isNotNull(data.exemptOrgName, 'Exempt org should fall back to vendor name');
         Assert.isNotNull(data.vendorName, 'Vendor name should be populated');
+        Assert.isNotNull(data.dataSourceLabel, 'dataSourceLabel should be populated');
+        Assert.isFalse(data.isOverride, 'isOverride should be false by default');
+        Assert.isTrue(data.dataSourceLabel.contains('no Work Order'), 'Without WO linked, dataSourceLabel should indicate no WO');
     }
 
     @isTest
@@ -151,6 +159,8 @@ private class ST120GeneratorTest {
         Assert.areEqual(1, outputs.size());
         Assert.areEqual(String.valueOf(po.Id), outputs[0].orderId);
         Assert.areEqual(po.Name, outputs[0].orderNumber);
+        Assert.isNotNull(outputs[0].dataSourceLabel, 'dataSourceLabel should be populated');
+        Assert.isFalse(outputs[0].isOverride, 'isOverride should be false by default');
     }
 
     // ------------------------------------------------------------------
@@ -285,6 +295,19 @@ private class ST120GeneratorTest {
         Map<String, Object> result = ST120Generator.uploadCertificate(po.Id, base64, 'test_cert.pdf');
         Test.stopTest();
         Assert.isTrue((Boolean)result.get('success'), 'Upload should succeed');
+    }
+
+    @isTest
+    static void testPageController() {
+        AcctSeedERP__Purchase_Order__c po = findPoWithWorkOrder();
+        Test.setCurrentPageReference(new PageReference('/apex/ST120Certificate?id=' + po.Id));
+        ApexPages.currentPage().getParameters().put('id', po.Id);
+        Test.startTest();
+        ST120CertificatePageController ctrl = new ST120CertificatePageController();
+        Test.stopTest();
+        Assert.isNotNull(ctrl.vendorName, 'Vendor name should be populated');
+        Assert.isNotNull(ctrl.poId, 'PO ID should be set');
+        Assert.isNotNull(ctrl.dataSourceLabel, 'dataSourceLabel should be populated on the controller');
     }
 
     @isTest

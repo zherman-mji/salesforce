@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <label>ST120 Tax Exempt Certificate</label>
-    <description>Grants field access and Apex/VF access for the ST-120.1 tax exempt certificate automation (HVAC-303), pivoted from Order to the AcctSeedERP Purchase Order object (HVAC-303 Option A, 2026-07-08). Fields existed without any FLS grants.</description>
+    <description>Grants field access and Apex/VF access for the ST-120.1 tax exempt certificate automation. HVAC-317: fields moved to WorkOrder with PO override support.</description>
     <hasActivationRequired>false</hasActivationRequired>
     <classAccesses>
         <apexClass>ST120Generator</apexClass>
@@ -47,6 +47,46 @@
     </fieldPermissions>
     <fieldPermissions>
         <field>Account.Tax_Exempt_Notes__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>AcctSeedERP__Purchase_Order__c.Exemption_Reason__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>AcctSeedERP__Purchase_Order__c.Override_Tax_Exempt__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>WorkOrder.Tax_Exempt_Purchase__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>WorkOrder.Cert_Delivery_Mode__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>WorkOrder.Tax_Exempt_Contact_Email__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>WorkOrder.Tax_Exempt_Contact_Name__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>WorkOrder.Prime_Contract_Date__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>WorkOrder.Exemption_Reason__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
