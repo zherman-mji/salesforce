@@ -1,0 +1,314 @@
+<apex:page standardController="AcctSeedERP__Purchase_Order__c" extensions="ST120GeneratorExtension" showHeader="false" sidebar="false" standardStylesheets="false">
+
+<head>
+    <title>ST-120.1 Tax Exempt Certificate</title>
+    <apex:includeScript value="{!$Resource.pdf_lib}"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f3f4f6; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; margin-bottom: 16px; }
+        h1 { font-size: 20px; font-weight: 600; margin-bottom: 16px; color: #111827; }
+        .field { margin-bottom: 12px; }
+        .field label { display: block; font-size: 12px; font-weight: 500; color: #6b7280; margin-bottom: 4px; text-transform: uppercase; }
+        .field .value { font-size: 14px; color: #111827; padding: 8px; background: #f9fafb; border-radius: 4px; border: 1px solid #e5e7eb; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn { display: inline-flex; align-items: center; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; }
+        .btn-primary { background: #2563eb; color: #fff; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-primary:disabled { background: #93c5fd; cursor: not-allowed; }
+        .btn-secondary { background: #e5e7eb; color: #374151; }
+        .btn-success { background: #16a34a; color: #fff; }
+        .actions { display: flex; gap: 12px; margin-top: 16px; align-items: center; }
+        .status { padding: 12px; border-radius: 6px; margin-top: 16px; display: none; }
+        .status.success { display: block; background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .status.error { display: block; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .status.loading { display: block; background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+        .status.warning { display: block; background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+        .sig-area { border: 2px dashed #d1d5db; border-radius: 6px; padding: 16px; text-align: center; margin-top: 12px; cursor: pointer; }
+        .sig-area:hover { background: #f9fafb; }
+        .sig-area img { max-width: 200px; max-height: 60px; }
+        .sig-input { display: none; }
+        .checkbox-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+        .checkbox-row label { font-size: 13px; font-weight: 400; text-transform: none; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>ST-120.1 Tax Exempt Certificate</h1>
+            <apex:outputPanel id="poId" style="display:none">{!AcctSeedERP__Purchase_Order__c.Id}</apex:outputPanel>
+            <apex:outputPanel id="poNum" style="display:none">{!orderNumber}</apex:outputPanel>
+            <div class="grid">
+                <div class="field">
+                    <label>Vendor Name</label>
+                    <div class="value" id="vendorName">{!vendorName}</div>
+                </div>
+                <div class="field">
+                    <label>MJI Name</label>
+                    <div class="value">{!mjiName}</div>
+                </div>
+                <div class="field">
+                    <label>Vendor Street</label>
+                    <div class="value" id="vendorStreet">{!vendorStreet}</div>
+                </div>
+                <div class="field">
+                    <label>MJI Street</label>
+                    <div class="value">{!mjiStreet}</div>
+                </div>
+                <div class="field">
+                    <label>Vendor City</label>
+                    <div class="value" id="vendorCity">{!vendorCity}</div>
+                </div>
+                <div class="field">
+                    <label>MJI City, State Zip</label>
+                    <div class="value">{!mjiCityStateZip}</div>
+                </div>
+                <div class="field">
+                    <label>Vendor State</label>
+                    <div class="value" id="vendorState">{!vendorState}</div>
+                </div>
+                <div class="field">
+                    <label>CA Number</label>
+                    <div class="value">{!caNumber}</div>
+                </div>
+                <div class="field">
+                    <label>Vendor ZIP</label>
+                    <div class="value" id="vendorZip">{!vendorZip}</div>
+                </div>
+                <div class="field">
+                    <label>Project Description</label>
+                    <div class="value" id="projectDesc">{!projectDescription}</div>
+                </div>
+            </div>
+
+            <div class="field" style="margin-top:12px;">
+                <label>Job Site Address</label>
+                <div class="value" id="jobSite">{!jobSiteAddress}</div>
+            </div>
+
+            <div class="field">
+                <label>Exempt Organization</label>
+                <div class="value" id="exemptOrg">{!exemptOrgName}</div>
+            </div>
+
+            <div class="grid">
+                <div class="field">
+                    <label>Prime Contract Date</label>
+                    <div class="value" id="contractDate">{!IF(primeContractDate!=null, primeContractDate, TODAY())}</div>
+                </div>
+                <div class="field">
+                    <label>Signer Name</label>
+                    <div class="value" id="signerName">{!IF(signerName!=null, signerName, 'Michael Herman')}</div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="field">
+                    <label>Signer Title</label>
+                    <div class="value" id="signerTitle">{!IF(signerTitle!=null, signerTitle, 'President')}</div>
+                </div>
+                <div class="field">
+                    <label>Date</label>
+                    <div class="value" id="genDate">{!TODAY()}</div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Exemption Reason</label>
+                <div class="checkbox-row" id="exemptionBox">
+                    <label><input type="radio" name="box" value="A" checked="checked"></input> A - Capital Improvement</label>
+                    <label><input type="radio" name="box" value="B"></input> B - Promotional</label>
+                    <label><input type="radio" name="box" value="C"></input> C - Manufacturing</label>
+                    <label><input type="radio" name="box" value="D"></input> D - Resale</label>
+                    <label><input type="radio" name="box" value="E"></input> E - Other</label>
+                    <label><input type="radio" name="box" value="F"></input> F - Farming</label>
+                    <label><input type="radio" name="box" value="G"></input> G - Educational</label>
+                    <label><input type="radio" name="box" value="H"></input> H - Government</label>
+                    <label><input type="radio" name="box" value="I"></input> I - Religious</label>
+                    <label><input type="radio" name="box" value="J"></input> J - Charitable</label>
+                    <label><input type="radio" name="box" value="K"></input> K - Commercial</label>
+                    <label><input type="radio" name="box" value="L"></input> L - Industrial</label>
+                    <label><input type="radio" name="box" value="M"></input> M - Residential</label>
+                    <label><input type="radio" name="box" value="N"></input> N - Research</label>
+                    <label><input type="radio" name="box" value="O"></input> O - Other A</label>
+                    <label><input type="radio" name="box" value="P"></input> P - Other B</label>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Signature (optional - upload image)</label>
+                <div class="sig-area" id="sigArea" onclick="document.getElementById('sigInput').click()">
+                    <span id="sigPlaceholder">Click to upload signature image (PNG)</span>
+                    <img id="sigPreview" style="display:none;"></img>
+                </div>
+                <input type="file" id="sigInput" class="sig-input" accept="image/png,image/jpeg"></input>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary" id="genBtn" onclick="generatePDF()">Generate Certificate</button>
+                <button class="btn btn-secondary" onclick="window.close()">Cancel</button>
+            </div>
+            <div class="status" id="status"></div>
+        </div>
+    </div>
+
+<script>
+//<![CDATA[
+var pdfFormBytes = null;
+
+// Load the template PDF form
+(async function() {
+    try {
+        var resp = await fetch('{!URLFOR($Resource.ST120_Form_Template)}');
+        var blob = await resp.blob();
+        pdfFormBytes = await blob.arrayBuffer();
+        setStatus('ready', 'Template loaded. Ready to generate.');
+    } catch(e) {
+        setStatus('error', 'Failed to load form template. Please refresh and try again.');
+    }
+})();
+
+// Signature upload
+document.getElementById('sigInput').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (file) {
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            var img = document.getElementById('sigPreview');
+            img.src = ev.target.result;
+            img.style.display = 'block';
+            document.getElementById('sigPlaceholder').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function setStatus(type, msg) {
+    var el = document.getElementById('status');
+    el.className = 'status ' + type;
+    el.textContent = msg;
+    el.style.display = 'block';
+}
+
+async function generatePDF() {
+    if (!pdfFormBytes) {
+        setStatus('error', 'Form template not loaded yet. Please wait.');
+        return;
+    }
+    
+    var btn = document.getElementById('genBtn');
+    btn.disabled = true;
+    btn.textContent = 'Generating...';
+    setStatus('loading', 'Filling form...');
+    
+    try {
+        var PDFDoc = PDFLib.PDFDocument;
+        var pdfDoc = await PDFDoc.load(pdfFormBytes);
+        var form = pdfDoc.getForm();
+        
+        // Fill text fields
+        var fields = {
+            'name of vendor': document.getElementById('vendorName').textContent.trim(),
+            'street address1': document.getElementById('vendorStreet').textContent.trim(),
+            'city1': document.getElementById('vendorCity').textContent.trim(),
+            'state1': document.getElementById('vendorState').textContent.trim(),
+            'zip code 1': document.getElementById('vendorZip').textContent.trim(),
+            'name of purchasing contractor': 'Michael James Industries, Inc.',
+            'street address2': '11 Drew Court',
+            'city2': 'Ronkonkoma',
+            'state2': 'NY',
+            'zip code 2': '11741',
+            'enter your sales tax vendor id number': '11-3507369',
+            'line 2 1': document.getElementById('projectDesc').textContent.trim(),
+            'line 2 2': document.getElementById('jobSite').textContent.trim(),
+            'line 2 3': document.getElementById('exemptOrg').textContent.trim(),
+            'line 2 4': document.getElementById('contractDate').textContent.trim(),
+            'type or print name and title of owner': document.getElementById('signerName').textContent.trim() + ', ' + document.getElementById('signerTitle').textContent.trim(),
+            'date prepared': document.getElementById('genDate').textContent.trim(),
+        };
+        
+        var selectedBox = document.querySelector('input[name="box"]:checked').value;
+        
+        for (var name in fields) {
+            try {
+                var field = form.getTextField(name);
+                field.setText(fields[name]);
+            } catch(e) {}
+        }
+        
+        // Fill checkboxes
+        for (var b = 0; b < 16; b++) {
+            var boxName = 'box ' + String.fromCharCode(97 + b);
+            var isChecked = String.fromCharCode(65 + b) === selectedBox;
+            try {
+                var checkbox = form.getCheckBox(boxName);
+                if (isChecked) { checkbox.check(); }
+                else { checkbox.uncheck(); }
+            } catch(e) {}
+        }
+        
+        // Add signature if provided
+        var sigImg = document.getElementById('sigPreview');
+        if (sigImg.style.display !== 'none' && sigImg.src) {
+            try {
+                var sigResp = await fetch(sigImg.src);
+                var sigBlob = await sigResp.blob();
+                var sigBytes = await sigBlob.arrayBuffer();
+                
+                var pages = pdfDoc.getPages();
+                if (pages.length > 1) {
+                    var sigImage = await pdfDoc.embedPng(sigBytes);
+                    pages[1].drawImage(sigImage, { x: 36, y: 718, width: 150, height: 30 });
+                }
+            } catch(e) {}
+        }
+        
+        var pdfBytes = await pdfDoc.save();
+        var orderNum = document.getElementById('poNum').textContent.trim();
+        var filename = 'ST120_Certificate_' + orderNum.replace(/[^a-zA-Z0-9-]/g, '_') + '.pdf';
+        var blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        
+        // Download to browser
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        
+        setStatus('loading', 'Uploading to Salesforce...');
+        
+        // Upload to Salesforce via RemoteAction
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            var base64 = ev.target.result.split(',')[1];
+            Visualforce.remoting.Manager.invokeAction(
+                'ST120Generator.uploadCertificate',
+                document.getElementById('poId').textContent.trim(),
+                base64,
+                filename,
+                function(result, event) {
+                    if (event.status && result.success) {
+                        setStatus('success', 'Certificate generated, downloaded, and saved to PO Files!');
+                        btn.textContent = 'Done';
+                        btn.className = 'btn btn-success';
+                    } else {
+                        setStatus('warning', 'Downloaded! But upload to Salesforce failed: ' + (result.error || event.message));
+                        btn.textContent = 'Downloaded (upload failed)';
+                        btn.className = 'btn btn-secondary';
+                    }
+                }
+            );
+        };
+        reader.readAsDataURL(blob);
+        
+    } catch(e) {
+        setStatus('error', 'Error: ' + e.message);
+        btn.disabled = false;
+        btn.textContent = 'Generate Certificate';
+    }
+}
+//]]>
+</script>
+
+</body>
+</apex:page>
