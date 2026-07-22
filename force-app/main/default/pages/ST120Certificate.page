@@ -78,7 +78,7 @@
             <!-- Vendor section -->
             <div class="source-group">
                 <div class="section-title">Vendor (Account)</div>
-                <div class="source-label">Record: <a href="/lightning/r/Account/{!vendorId}/view" target="_blank">{!vendorName}</a></div>
+                <div class="source-label">Record: <a id="vendorName" href="/lightning/r/Account/{!vendorId}/view" target="_blank">{!vendorName}</a></div>
                 <div class="grid">
                     <div class="field full-width">
                         <label>Street Address</label>
