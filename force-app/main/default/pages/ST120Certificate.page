@@ -48,20 +48,14 @@
         <div class="card">
             <h1 style="font-size:20px;margin-bottom:16px;">ST-120.1 Tax Exempt Certificate</h1>
 
-            <!-- Guidance banner -->
+            <!-- Consolidated guidance banner -->
             <div class="banner">
                 <strong>⚠️ Review before generating</strong>
-                If any of the information below is incorrect, update it in the source record in Salesforce <em>before</em> generating the certificate. The certificate is generated from live Salesforce data — correcting the source record ensures accuracy for all future certificates.
-            </div>
-
-            <!-- Data source banner -->
-            <div class="banner" style="background:#e8f4fd;border-color:#b6d4fe;color:#1e40af;">
-                <strong>ℹ️ {!dataSourceLabel}</strong>
                 <apex:outputPanel rendered="{!IF(isOverride,true,false)}">
-                    This PO is using its own tax exempt values. Uncheck <strong>Override Tax Exempt</strong> on this PO to inherit from the Work Order.
+                    This PO is using its own tax exempt values. If any information below is incorrect, update this Purchase Order before generating. Uncheck <strong>Override Tax Exempt</strong> to inherit from the Work Order.
                 </apex:outputPanel>
                 <apex:outputPanel rendered="{!IF(!isOverride,true,false)}">
-                    Values are inherited from the linked Work Order. To use different values for this PO, check <strong>Override Tax Exempt</strong> on this PO record.
+                    Values are inherited from the linked Work Order. If any information below is incorrect, update the Work Order before generating. Check <strong>Override Tax Exempt</strong> on this PO to use different values.
                 </apex:outputPanel>
             </div>
 
