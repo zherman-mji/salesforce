@@ -22,6 +22,25 @@
  * The delivery mode, contact email, and contact name remain PO-specific (each
  * vendor/PO may have different delivery preferences).
  *
+ * HVAC-407 — Field requirements and button logic cleanup (2026-07-23)
+ * ----------------------------------------------------------------
+ * Removed Tax_Exempt_Purchase__c from SOQL queries in buildCertificateData()
+ * since it is no longer the source of truth. Exemption_Reason__c is now the
+ * determinant for tax exempt eligibility. The three fields Tax_Exempt_Contact_Name__c,
+ * Tax_Exempt_Contact_Email__c, and Cert_Delivery_Mode__c are no longer required
+ * on the Work Order page layout — they remain on the PO where they are used for
+ * delivery-specific configuration.
+ *
+ * HVAC-408 — Vendor Contact lookup replaces individual text/email fields (2026-07-23)
+ * -----------------------------------------------------------------------------------
+ * Removed Tax_Exempt_Contact_Name__c and Tax_Exempt_Contact_Email__c from the PO.
+ * Replaced with a single Vendor_Contact__c lookup to Contact, filtered to contacts
+ * associated with the PO's vendor (AcctSeedERP__Vendor__r). The lookup is ready for
+ * future automation use (PO email, tax forms) but does not drive behavior yet.
+ * The SOQL now queries Vendor_Contact__r.Email and Vendor_Contact__r.Name for
+ * future use; GenerateRequest.contactEmail/contactName remain as flow-input
+ * overrides for the existing delivery mechanism.
+ *
  * Invocable member names/labels on GenerateRequest (e.g. "orderId" / "Order ID")
  * are UNCHANGED from the Order-based version so the existing Screen Flow that
  * calls this action does not need to be touched. They now carry Purchase Order
@@ -125,11 +144,11 @@ public with sharing class ST120Generator {
                    AcctSeedERP__Vendor__r.BillingState, AcctSeedERP__Vendor__r.BillingPostalCode,
                    AcctSeedERP__Vendor__r.Tax_Exempt_Policy__c, AcctSeedERP__Vendor__r.Tax_Exempt_Notes__c,
                    AcctSeedERP__Vendor__r.Vendor_Type__c,
-                   Tax_Exempt_Purchase__c, Cert_Delivery_Mode__c,
-                   Tax_Exempt_Contact_Email__c, Tax_Exempt_Contact_Name__c,
+                   Cert_Delivery_Mode__c,
                    Prime_Contract_Date__c,
                    Exemption_Reason__c,
                    Override_Tax_Exempt__c,
+                   Vendor_Contact__c, Vendor_Contact__r.Email, Vendor_Contact__r.Name,
                    Work_Order__c,
                    Work_Order__r.WorkOrderNumber,
                    Work_Order__r.WorkTypeId, Work_Order__r.WorkType.Name,
@@ -137,8 +156,7 @@ public with sharing class ST120Generator {
                    Work_Order__r.AccountId, Work_Order__r.Account.Name,
                    Work_Order__r.Street, Work_Order__r.City,
                    Work_Order__r.State, Work_Order__r.PostalCode,
-                   // HVAC-317: WO tax exempt fields for inheritance
-                   Work_Order__r.Tax_Exempt_Purchase__c,
+                   // HVAC-407: Exemption_Reason__c is the source of truth (not Tax_Exempt_Purchase__c)
                    Work_Order__r.Exemption_Reason__c,
                    Work_Order__r.Prime_Contract_Date__c
             FROM AcctSeedERP__Purchase_Order__c
