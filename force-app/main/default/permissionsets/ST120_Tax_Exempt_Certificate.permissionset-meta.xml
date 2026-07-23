@@ -61,26 +61,6 @@
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>WorkOrder.Tax_Exempt_Purchase__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <field>WorkOrder.Cert_Delivery_Mode__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <field>WorkOrder.Tax_Exempt_Contact_Email__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <field>WorkOrder.Tax_Exempt_Contact_Name__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
-    <fieldPermissions>
         <field>WorkOrder.Prime_Contract_Date__c</field>
         <readable>true</readable>
         <editable>true</editable>

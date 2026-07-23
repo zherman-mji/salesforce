@@ -22,6 +22,15 @@
  * The delivery mode, contact email, and contact name remain PO-specific (each
  * vendor/PO may have different delivery preferences).
  *
+ * HVAC-407 — Field requirements and button logic cleanup (2026-07-23)
+ * ----------------------------------------------------------------
+ * Removed Work_Order__r.Tax_Exempt_Purchase__c from SOQL in
+ * buildCertificateData() since the field was deleted from WorkOrder.
+ * Exemption_Reason__c is the sole determinant for tax exempt eligibility.
+ * The fields Tax_Exempt_Contact_Name__c, Tax_Exempt_Contact_Email__c,
+ * Cert_Delivery_Mode__c, and Tax_Exempt_Purchase__c were deleted from the
+ * WorkOrder object (they remain on Purchase Order for PO-specific config).
+ *
  * Invocable member names/labels on GenerateRequest (e.g. "orderId" / "Order ID")
  * are UNCHANGED from the Order-based version so the existing Screen Flow that
  * calls this action does not need to be touched. They now carry Purchase Order
@@ -137,8 +146,7 @@ public with sharing class ST120Generator {
                    Work_Order__r.AccountId, Work_Order__r.Account.Name,
                    Work_Order__r.Street, Work_Order__r.City,
                    Work_Order__r.State, Work_Order__r.PostalCode,
-                   // HVAC-317: WO tax exempt fields for inheritance
-                   Work_Order__r.Tax_Exempt_Purchase__c,
+                   // HVAC-407: Exemption_Reason__c is the source of truth (not Tax_Exempt_Purchase__c)
                    Work_Order__r.Exemption_Reason__c,
                    Work_Order__r.Prime_Contract_Date__c
             FROM AcctSeedERP__Purchase_Order__c
