@@ -23,9 +23,6 @@
         <members>AcctSeedERP__Purchase_Order__c.Exemption_Reason__c</members>
         <members>AcctSeedERP__Purchase_Order__c.Override_Tax_Exempt__c</members>
         <members>WorkOrder.Tax_Exempt_Purchase__c</members>
-        <members>WorkOrder.Cert_Delivery_Mode__c</members>
-        <members>WorkOrder.Tax_Exempt_Contact_Email__c</members>
-        <members>WorkOrder.Tax_Exempt_Contact_Name__c</members>
         <members>WorkOrder.Prime_Contract_Date__c</members>
         <members>WorkOrder.Exemption_Reason__c</members>
         <name>CustomField</name>
