@@ -22,6 +22,15 @@
  * The delivery mode, contact email, and contact name remain PO-specific (each
  * vendor/PO may have different delivery preferences).
  *
+ * HVAC-407 — Field requirements and button logic cleanup (2026-07-23)
+ * ----------------------------------------------------------------
+ * Removed Tax_Exempt_Purchase__c from SOQL queries in buildCertificateData()
+ * since it is no longer the source of truth. Exemption_Reason__c is now the
+ * determinant for tax exempt eligibility. The three fields Tax_Exempt_Contact_Name__c,
+ * Tax_Exempt_Contact_Email__c, and Cert_Delivery_Mode__c are no longer required
+ * on the Work Order page layout — they remain on the PO where they are used for
+ * delivery-specific configuration.
+ *
  * Invocable member names/labels on GenerateRequest (e.g. "orderId" / "Order ID")
  * are UNCHANGED from the Order-based version so the existing Screen Flow that
  * calls this action does not need to be touched. They now carry Purchase Order
@@ -125,7 +134,7 @@ public with sharing class ST120Generator {
                    AcctSeedERP__Vendor__r.BillingState, AcctSeedERP__Vendor__r.BillingPostalCode,
                    AcctSeedERP__Vendor__r.Tax_Exempt_Policy__c, AcctSeedERP__Vendor__r.Tax_Exempt_Notes__c,
                    AcctSeedERP__Vendor__r.Vendor_Type__c,
-                   Tax_Exempt_Purchase__c, Cert_Delivery_Mode__c,
+                   Cert_Delivery_Mode__c,
                    Tax_Exempt_Contact_Email__c, Tax_Exempt_Contact_Name__c,
                    Prime_Contract_Date__c,
                    Exemption_Reason__c,
@@ -137,8 +146,7 @@ public with sharing class ST120Generator {
                    Work_Order__r.AccountId, Work_Order__r.Account.Name,
                    Work_Order__r.Street, Work_Order__r.City,
                    Work_Order__r.State, Work_Order__r.PostalCode,
-                   // HVAC-317: WO tax exempt fields for inheritance
-                   Work_Order__r.Tax_Exempt_Purchase__c,
+                   // HVAC-407: Exemption_Reason__c is the source of truth (not Tax_Exempt_Purchase__c)
                    Work_Order__r.Exemption_Reason__c,
                    Work_Order__r.Prime_Contract_Date__c
             FROM AcctSeedERP__Purchase_Order__c
