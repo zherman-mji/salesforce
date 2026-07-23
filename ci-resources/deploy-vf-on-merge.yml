@@ -1,0 +1,27 @@
+name: Deploy Visualforce Pages on Merge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'force-app/main/default/pages/**'
+
+jobs:
+  deploy-vf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install pyjwt cryptography
+      - name: Deploy changed VF pages
+        env:
+          SF_CLIENT_ID: ${{ secrets.SF_CLIENT_ID }}
+          SF_CLIENT_SECRET: ${{ secrets.SF_CLIENT_SECRET }}
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_INSTANCE_URL: ${{ secrets.SF_INSTANCE_URL }}
+          SF_PRIVATE_KEY: ${{ secrets.SF_PRIVATE_KEY }}
+        run: python3 .github/workflows/deploy_vf.py
