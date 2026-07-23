@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <label>ST120 Tax Exempt Certificate</label>
-    <description>Grants field access and Apex/VF access for the ST-120.1 tax exempt certificate automation. HVAC-317: fields moved to WorkOrder with PO override support.</description>
+    <description>Grants field access and Apex/VF access for the ST-120.1 tax exempt certificate automation. HVAC-317: fields moved to WorkOrder with PO override support. HVAC-408: replaced Tax_Exempt_Contact_Email/Name with Vendor_Contact__c lookup.</description>
     <hasActivationRequired>false</hasActivationRequired>
     <classAccesses>
         <apexClass>ST120Generator</apexClass>
@@ -31,16 +31,6 @@
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>Account.Tax_Exempt_Policy__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <field>Account.Tax_Exempt_Notes__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
-    <fieldPermissions>
         <field>AcctSeedERP__Purchase_Order__c.Exemption_Reason__c</field>
         <readable>true</readable>
         <editable>true</editable>
@@ -56,22 +46,17 @@
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>WorkOrder.Tax_Exempt_Purchase__c</field>
+        <field>AcctSeedERP__Purchase_Order__c.Vendor_Contact__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>WorkOrder.Cert_Delivery_Mode__c</field>
+        <field>Account.Tax_Exempt_Policy__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>WorkOrder.Tax_Exempt_Contact_Email__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <field>WorkOrder.Tax_Exempt_Contact_Name__c</field>
+        <field>Account.Tax_Exempt_Notes__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>

@@ -22,7 +22,7 @@
  * The delivery mode, contact email, and contact name remain PO-specific (each
  * vendor/PO may have different delivery preferences).
  *
- * HVAC-407 — Field requirements and button logic cleanup (2026-07-23)
+* HVAC-407 — Field requirements and button logic cleanup (2026-07-23)
  * ----------------------------------------------------------------
  * Removed Tax_Exempt_Purchase__c from SOQL queries in buildCertificateData()
  * since it is no longer the source of truth. Exemption_Reason__c is now the
@@ -31,15 +31,12 @@
  * on the Work Order page layout — they remain on the PO where they are used for
  * delivery-specific configuration.
  *
- * HVAC-408 — Vendor Contact lookup replaces individual text/email fields (2026-07-23)
- * -----------------------------------------------------------------------------------
+ * HVAC-408 — Vendor Contact lookup replaces text/email fields (2026-07-23)
+ * -------------------------------------------------------------------------
  * Removed Tax_Exempt_Contact_Name__c and Tax_Exempt_Contact_Email__c from the PO.
- * Replaced with a single Vendor_Contact__c lookup to Contact, filtered to contacts
- * associated with the PO's vendor (AcctSeedERP__Vendor__r). The lookup is ready for
- * future automation use (PO email, tax forms) but does not drive behavior yet.
- * The SOQL now queries Vendor_Contact__r.Email and Vendor_Contact__r.Name for
- * future use; GenerateRequest.contactEmail/contactName remain as flow-input
- * overrides for the existing delivery mechanism.
+ * Replaced with a single Vendor_Contact__c lookup to Contact. The SOQL no longer
+ * selects the deleted text fields — contact info is provided via the Screen Flow
+ * invocable variables (GenerateRequest.contactEmail, GenerateRequest.contactName).
  *
  * Invocable member names/labels on GenerateRequest (e.g. "orderId" / "Order ID")
  * are UNCHANGED from the Order-based version so the existing Screen Flow that
@@ -144,7 +141,8 @@ public with sharing class ST120Generator {
                    AcctSeedERP__Vendor__r.BillingState, AcctSeedERP__Vendor__r.BillingPostalCode,
                    AcctSeedERP__Vendor__r.Tax_Exempt_Policy__c, AcctSeedERP__Vendor__r.Tax_Exempt_Notes__c,
                    AcctSeedERP__Vendor__r.Vendor_Type__c,
-                   Cert_Delivery_Mode__c,
+Cert_Delivery_Mode__c,
+                   // HVAC-408: Tax_Exempt_Contact_Email/Name removed from PO
                    Prime_Contract_Date__c,
                    Exemption_Reason__c,
                    Override_Tax_Exempt__c,
