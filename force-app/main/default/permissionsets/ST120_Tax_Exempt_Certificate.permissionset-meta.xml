@@ -26,16 +26,6 @@
         <editable>true</editable>
     </fieldPermissions>
     <fieldPermissions>
-        <field>AcctSeedERP__Purchase_Order__c.Tax_Exempt_Contact_Email__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <field>AcctSeedERP__Purchase_Order__c.Tax_Exempt_Contact_Name__c</field>
-        <readable>true</readable>
-        <editable>true</editable>
-    </fieldPermissions>
-    <fieldPermissions>
         <field>AcctSeedERP__Purchase_Order__c.Prime_Contract_Date__c</field>
         <readable>true</readable>
         <editable>true</editable>
@@ -52,6 +42,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <field>AcctSeedERP__Purchase_Order__c.Exemption_Reason__c</field>
+        <readable>true</readable>
+        <editable>true</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>AcctSeedERP__Purchase_Order__c.Vendor_Contact__c</field>
         <readable>true</readable>
         <editable>true</editable>
     </fieldPermissions>
