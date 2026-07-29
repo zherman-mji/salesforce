@@ -31,12 +31,14 @@
  * on the Work Order page layout — they remain on the PO where they are used for
  * delivery-specific configuration.
  *
- * HVAC-408 — Vendor Contact lookup replaces text/email fields (2026-07-23)
+ * HVAC-408 — Vendor Contact lookup replaces text/email fields (2026-07-23, refactored 2026-07-29)
  * -------------------------------------------------------------------------
  * Removed Tax_Exempt_Contact_Name__c and Tax_Exempt_Contact_Email__c from the PO.
- * Replaced with a single Vendor_Contact__c lookup to Contact. The SOQL no longer
- * selects the deleted text fields — contact info is provided via the Screen Flow
- * invocable variables (GenerateRequest.contactEmail, GenerateRequest.contactName).
+ * Replaced with AcctSeedERP__Vendor_Contact__c (existing managed-package lookup to
+ * Contact). The SOQL no longer selects the deleted text fields — contact info is
+ * provided via the Screen Flow invocable variables (GenerateRequest.contactEmail,
+ * GenerateRequest.contactName). Vendor_Contact__c, Cert_Delivery_Mode__c, and
+ * Tax_Exempt_Purchase__c removed as redundant.
  *
  * Invocable member names/labels on GenerateRequest (e.g. "orderId" / "Order ID")
  * are UNCHANGED from the Order-based version so the existing Screen Flow that
@@ -141,12 +143,11 @@ public with sharing class ST120Generator {
                    AcctSeedERP__Vendor__r.BillingState, AcctSeedERP__Vendor__r.BillingPostalCode,
                    AcctSeedERP__Vendor__r.Tax_Exempt_Policy__c, AcctSeedERP__Vendor__r.Tax_Exempt_Notes__c,
                    AcctSeedERP__Vendor__r.Vendor_Type__c,
-Cert_Delivery_Mode__c,
-                   // HVAC-408: Tax_Exempt_Contact_Email/Name removed from PO
+// HVAC-408: Tax_Exempt_Contact_Email/Name removed from PO; using AcctSeedERP__Vendor_Contact__c
                    Prime_Contract_Date__c,
                    Exemption_Reason__c,
                    Override_Tax_Exempt__c,
-                   Vendor_Contact__c, Vendor_Contact__r.Email, Vendor_Contact__r.Name,
+                   AcctSeedERP__Vendor_Contact__c, AcctSeedERP__Vendor_Contact__r.Email, AcctSeedERP__Vendor_Contact__r.Name,
                    Work_Order__c,
                    Work_Order__r.WorkOrderNumber,
                    Work_Order__r.WorkTypeId, Work_Order__r.WorkType.Name,
