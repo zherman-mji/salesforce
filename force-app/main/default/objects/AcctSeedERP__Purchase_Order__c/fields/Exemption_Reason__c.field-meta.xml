@@ -87,6 +87,21 @@
                 <default>false</default>
                 <label>P - Other B</label>
             </value>
+            <value>
+                <fullName>Q - Tenant Lease Improvement</fullName>
+                <default>false</default>
+                <label>Q - Tenant Lease Improvement</label>
+            </value>
+            <value>
+                <fullName>R - Energy Storage Equipment</fullName>
+                <default>false</default>
+                <label>R - Energy Storage Equipment</label>
+            </value>
+            <value>
+                <fullName>S - Solar Equipment Installation</fullName>
+                <default>false</default>
+                <label>S - Solar Equipment Installation</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
