@@ -282,7 +282,7 @@ async function generatePDF() {
             } catch(e) {}
         }
 
-        for (var b = 0; b < 16; b++) {
+        for (var b = 0; b < 19; b++) {
             var boxName = 'box ' + String.fromCharCode(97 + b);
             var isChecked = String.fromCharCode(65 + b) === selectedBox;
             try {
