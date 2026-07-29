@@ -52,10 +52,10 @@
             <div class="banner">
                 <strong>⚠️ Review before generating</strong>
                 <apex:outputPanel rendered="{!IF(isOverride,true,false)}">
-                    This PO is using its own tax exempt values. If any information below is incorrect, update this Purchase Order before generating. Uncheck <strong>Override Tax Exempt</strong> to inherit from the Work Order.
+                    This PO uses its own tax exempt values. If anything is wrong, update this PO before generating. Uncheck <strong>Override Tax Exempt</strong> to inherit from the Work Order.
                 </apex:outputPanel>
                 <apex:outputPanel rendered="{!IF(!isOverride,true,false)}">
-                    Values are inherited from the linked Work Order. If any information below is incorrect, update the Work Order before generating. Check <strong>Override Tax Exempt</strong> on this PO to use different values.
+                    Values are inherited from the linked Work Order. If anything is wrong, update the Work Order before generating. Check <strong>Override Tax Exempt</strong> to use different values.
                 </apex:outputPanel>
             </div>
 
