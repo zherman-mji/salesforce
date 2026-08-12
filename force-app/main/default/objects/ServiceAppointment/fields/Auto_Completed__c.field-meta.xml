@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_Completed__c</fullName>
+    <label>Auto Completed</label>
+    <description>Checked when agent automatically completes this appointment via telematics check</description>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+</CustomField>

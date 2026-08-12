@@ -1,0 +1,71 @@
+<template>
+    <div class="priority-card slds-p-around_medium slds-m-bottom_x-small" onclick={handleClick}>
+        <div class="slds-grid slds-grid_vertical-align-start slds-wrap">
+            <!-- Left: Main content -->
+            <div class="slds-col slds-size_3-of-4 slds-medium-size_4-of-5">
+                <!-- Header row: Appointment # + Account -->
+                <div class="card-header slds-m-bottom_xx-small">
+                    <a href={appointmentLink} onclick={handleApptLink} class="appt-number">
+                        {appointment.appointmentNumber}
+                    </a>
+                    <span class="separator">|</span>
+                    <span class="account-name">{appointment.accountName}</span>
+                </div>
+
+                <!-- Time + Tech -->
+                <div class="meta-row slds-m-bottom_x-small">
+                    <lightning-icon icon-name="utility:clock" size="xx-small"></lightning-icon>
+                    <span class="slds-m-left_xx-small">
+                        {appointment.schedStart} – {appointment.schedEnd}
+                    </span>
+                    <template if:true={appointment.assignedTechName}>
+                        <lightning-icon icon-name="utility:user" size="xx-small" class="slds-m-left_small"></lightning-icon>
+                        <span class="slds-m-left_xx-small">{appointment.assignedTechName}</span>
+                    </template>
+                </div>
+
+                <!-- Asset -->
+                <template if:true={appointment.assetName}>
+                    <div class="meta-row slds-m-bottom_x-small">
+                        <lightning-icon icon-name="utility:record" size="xx-small"></lightning-icon>
+                        <span class="slds-m-left_xx-small">{appointment.assetName}</span>
+                        <template if:true={appointment.assetModel}>
+                            <span class="slds-m-left_xx-small meta-muted">({appointment.assetModel})</span>
+                        </template>
+                    </div>
+                </template>
+
+                <!-- Summary -->
+                <div class="summary-text slds-m-top_x-small">
+                    {analysis.summary}
+                </div>
+
+                <!-- Reason tag -->
+                <div class="reason-tag slds-m-top_x-small">
+                    <lightning-badge label={analysis.reason}></lightning-badge>
+                </div>
+            </div>
+
+            <!-- Right: Indicators -->
+            <div class="slds-col slds-size_1-of-4 slds-medium-size_1-of-5 slds-text-align_right">
+                <!-- Emergency badge -->
+                <template if:true={appointment.isEmergency}>
+                    <lightning-badge label="EMERGENCY" variant="warning" class="slds-m-bottom_xx-small"></lightning-badge>
+                </template>
+
+                <!-- Callback badge -->
+                <template if:true={appointment.callbackRequested}>
+                    <lightning-icon icon-name="utility:call" size="small" title="Callback requested"></lightning-icon>
+                </template>
+
+                <!-- Signal count -->
+                <div class="signal-count slds-m-top_xx-small">
+                    {analysis.signalCount} signal{signalTextSuffix}
+                </div>
+
+                <!-- Chevron -->
+                <lightning-icon icon-name="utility:chevronright" size="small" class="slds-m-top_x-small"></lightning-icon>
+            </div>
+        </div>
+    </div>
+</template>

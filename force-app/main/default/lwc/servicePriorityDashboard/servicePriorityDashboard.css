@@ -1,0 +1,102 @@
+.dashboard-container {
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    background: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.date-range-picker {
+    flex-wrap: wrap;
+}
+
+.date-separator {
+    color: #706e6b;
+    font-size: 1.25rem;
+    font-weight: 300;
+}
+
+.summary-badge {
+    font-size: 0.875rem;
+}
+
+/* Priority Section Headers */
+.priority-section {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.priority-header {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.15s;
+}
+
+.priority-header:hover {
+    opacity: 0.9;
+}
+
+.priority-header lightning-icon {
+    --slds-c-icon-color-foreground: white;
+}
+
+.priority-header h2 {
+    color: white;
+    flex: 1;
+}
+
+.urgent-header {
+    background-color: #c23934;
+}
+
+.high-header {
+    background-color: #d9731a;
+}
+
+.medium-header {
+    background-color: #b07c1a;
+}
+
+.low-header {
+    background-color: #2e844a;
+}
+
+.priority-body {
+    background: white;
+    padding: 0.5rem;
+}
+
+/* Empty State */
+.empty-state {
+    min-height: 300px;
+    padding: 3rem;
+}
+
+/* Error */
+lightning-alert {
+    margin: 1rem 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 0.5rem;
+    }
+    .dashboard-header {
+        padding: 0.75rem;
+    }
+    .date-range-picker {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .date-separator {
+        display: none;
+    }
+}

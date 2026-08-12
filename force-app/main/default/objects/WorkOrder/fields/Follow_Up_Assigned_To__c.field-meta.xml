@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Follow_Up_Assigned_To__c</fullName>
+    <label>Follow-Up Assigned To</label>
+    <description>User assigned to handle the follow-up action identified by the Service Priority Dashboard.</description>
+    <required>false</required>
+    <type>Lookup</type>
+    <referenceTo>User</referenceTo>
+    <relationshipLabel>Follow-Up Assignments</relationshipLabel>
+    <relationshipName>FollowUpAssignments</relationshipName>
+    <deleteConstraint>SetNull</deleteConstraint>
+</CustomField>
