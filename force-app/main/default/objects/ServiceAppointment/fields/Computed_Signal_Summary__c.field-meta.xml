@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Computed_Signal_Summary__c</fullName>
+    <label>Computed Signal Summary</label>
+    <description>Plain-text summary of the detection signals that fired for this appointment. Updated on dashboard load.</description>
+    <required>false</required>
+    <type>LongTextArea</type>
+    <length>32768</length>
+    <visibleLines>6</visibleLines>
+</CustomField>

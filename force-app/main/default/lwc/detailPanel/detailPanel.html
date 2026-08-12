@@ -1,0 +1,216 @@
+<template>
+    <div class="detail-panel-backdrop" onclick={handleBackdropClick}>
+        <section class="detail-panel slds-p-around_medium" role="dialog" aria-label="Appointment Details" onclick={handlePanelClick}>
+            <!-- Close button -->
+            <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_small">
+                <h2 class="slds-text-heading_medium slds-truncate" title={appointment.appointmentNumber}>
+                    {appointment.appointmentNumber} — {appointment.accountName}
+                </h2>
+                <lightning-button
+                    icon-name="utility:close"
+                    variant="bare"
+                    class="slds-m-left_auto"
+                    onclick={handleClose}
+                    title="Close panel">
+                </lightning-button>
+            </div>
+
+            <!-- Loading spinner -->
+            <template if:true={isLoadingDetails}>
+                <div class="slds-align_absolute-center slds-p-around_xx-large">
+                    <lightning-spinner alternative-text="Loading details..." size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <template if:false={isLoadingDetails}>
+                <!-- Tabs -->
+                <lightning-tabset variant="scoped">
+                    <!-- Tab 1: Work Order Summary -->
+                    <lightning-tab label="Work Order" icon-name="utility:document">
+                        <div class="slds-p-around_medium">
+                            <dl class="slds-list_horizontal slds-wrap detail-list">
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Status</dt>
+                                <dd class="slds-item_detail slds-truncate">{workOrder.Status}</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">WO Number</dt>
+                                <dd class="slds-item_detail slds-truncate">{workOrder.WorkOrderNumber}</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Site</dt>
+                                <dd class="slds-item_detail slds-truncate">{workOrder.Account.Name}</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Contact</dt>
+                                <dd class="slds-item_detail slds-truncate">
+                                    {workOrder.Contact.Name}
+                                    <template if:true={workOrder.Contact.Phone}>
+                                        <br/>{workOrder.Contact.Phone}
+                                    </template>
+                                </dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Asset</dt>
+                                <dd class="slds-item_detail slds-truncate">
+                                    {workOrder.Asset.Name}
+                                    <template if:true={workOrder.Asset.SerialNumber}>
+                                        (S/N: {workOrder.Asset.SerialNumber})
+                                    </template>
+                                </dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Service Contract</dt>
+                                <dd class="slds-item_detail slds-truncate">
+                                    {workOrder.ServiceContract__r.ContractNumber} — {workOrder.ServiceContract__r.Status}
+                                </dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Duration</dt>
+                                <dd class="slds-item_detail slds-truncate">{workOrder.DurationInMinutes} min</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Customer PO</dt>
+                                <dd class="slds-item_detail slds-truncate">{workOrder.Customer_PO__c}</dd>
+                            </dl>
+
+                            <!-- Quick Actions -->
+                            <div class="slds-grid slds-grid_vertical-align-center slds-m-top_medium action-buttons">
+                                <lightning-button
+                                    label="View Full WO"
+                                    icon-name="utility:open"
+                                    onclick={handleViewWO}
+                                    variant="brand"
+                                    class="slds-m-right_x-small">
+                                </lightning-button>
+                                <lightning-button
+                                    label="Create Task"
+                                    icon-name="utility:new_task"
+                                    onclick={handleCreateTask}
+                                    variant="neutral"
+                                    class="slds-m-right_x-small">
+                                </lightning-button>
+                                <lightning-button
+                                    label="View Account"
+                                    icon-name="utility:open"
+                                    onclick={handleViewAccount}
+                                    variant="neutral">
+                                </lightning-button>
+                            </div>
+                        </div>
+                    </lightning-tab>
+
+                    <!-- Tab 2: Work Performed (WOLIs) -->
+                    <lightning-tab label="Work Performed" icon-name="utility:check">
+                        <template if:true={hasWOLIs}>
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-m-around_medium">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Qty</th>
+                                        <th scope="col">Asset</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={wolis} for:item="woli">
+                                        <tr key={woli.Id}>
+                                            <td>{woli.Description}</td>
+                                            <td>{woli.Status}</td>
+                                            <td>{woli.Quantity}</td>
+                                            <td>{woli.Asset.Name}</td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </template>
+                        <template if:false={hasWOLIs}>
+                            <p class="slds-p-around_medium slds-text-color_weak">No work order line items found.</p>
+                        </template>
+                    </lightning-tab>
+
+                    <!-- Tab 3: Service Notes -->
+                    <lightning-tab label="Service Notes" icon-name="utility:note">
+                        <div class="slds-p-around_medium">
+                            <template if:true={workOrder.Executive_Summary__c}>
+                                <h3 class="slds-text-title slds-m-bottom_xx-small">Executive Summary</h3>
+                                <p class="slds-m-bottom_medium note-text">{workOrder.Executive_Summary__c}</p>
+                            </template>
+                            <template if:true={workOrder.Service_Notes__c}>
+                                <h3 class="slds-text-title slds-m-bottom_xx-small">Service Notes</h3>
+                                <p class="slds-m-bottom_medium note-text">{workOrder.Service_Notes__c}</p>
+                            </template>
+                            <template if:true={workOrder.Next_Steps__c}>
+                                <h3 class="slds-text-title slds-m-bottom_xx-small">Next Steps</h3>
+                                <p class="slds-m-bottom_medium note-text">{workOrder.Next_Steps__c}</p>
+                            </template>
+                            <template if:true={workOrder.Risks__c}>
+                                <h3 class="slds-text-title slds-m-bottom_xx-small">Risks</h3>
+                                <p class="slds-m-bottom_medium note-text">{workOrder.Risks__c}</p>
+                            </template>
+                            <template if:false={hasNotes}>
+                                <p class="slds-text-color_weak">No service notes recorded.</p>
+                            </template>
+                        </div>
+                    </lightning-tab>
+
+                    <!-- Tab 4: Customer Correspondence -->
+                    <lightning-tab label="Correspondence" icon-name="utility:email">
+                        <template if:true={hasCorrespondence}>
+                            <div class="slds-p-around_medium">
+                                <template for:each={conversationEntries} for:item="entry">
+                                    <div key={entry.Id} class="slds-m-bottom_small entry-item {entry.directionClass}">
+                                        <div class="entry-header slds-grid slds-grid_vertical-align-center">
+                                            <lightning-icon
+                                                icon-name={entry.directionIcon}
+                                                size="xx-small">
+                                            </lightning-icon>
+                                            <span class="slds-m-left_xx-small entry-direction">
+                                                {entry.directionLabel}
+                                            </span>
+                                            <span class="slds-m-left_auto entry-time">
+                                                {entry.receivedTime}
+                                            </span>
+                                        </div>
+                                        <p class="entry-body">{entry.MessageBody}</p>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                        <template if:false={hasCorrespondence}>
+                            <p class="slds-p-around_medium slds-text-color_weak">No customer correspondence found.</p>
+                        </template>
+                    </lightning-tab>
+
+                    <!-- Tab 5: Activity Feed -->
+                    <lightning-tab label="Activity Feed" icon-name="utility:chatter">
+                        <template if:true={hasFeedItems}>
+                            <div class="slds-p-around_medium">
+                                <template for:each={feedItems} for:item="feed">
+                                    <div key={feed.Id} class="slds-m-bottom_medium feed-item">
+                                        <div class="slds-grid slds-grid_vertical-align-center slds-m-bottom_xx-small">
+                                            <span class="feed-author">{feed.CreatedBy.Name}</span>
+                                            <span class="slds-m-left_auto feed-time">{feed.createdDate}</span>
+                                        </div>
+                                        <template if:true={feed.Title}>
+                                            <p class="feed-title">{feed.Title}</p>
+                                        </template>
+                                        <template if:true={feed.Body}>
+                                            <p class="feed-body">{feed.Body}</p>
+                                        </template>
+                                        <!-- Comments -->
+                                        <template if:true={feed.hasComments}>
+                                            <div class="feed-comments slds-m-left_medium slds-m-top_x-small">
+                                                <template for:each={feed.FeedComments} for:item="comment">
+                                                    <div key={comment.Id} class="slds-m-bottom_xx-small">
+                                                        <span class="comment-author">{comment.CreatedBy.Name}: </span>
+                                                        <span class="comment-body">{comment.CommentBody}</span>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                        <template if:false={hasFeedItems}>
+                            <p class="slds-p-around_medium slds-text-color_weak">No activity feed entries found.</p>
+                        </template>
+                    </lightning-tab>
+                </lightning-tabset>
+            </template>
+        </section>
+    </div>
+</template>

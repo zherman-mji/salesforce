@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Service Priority Dashboard</label>
+    <description>Access to the Service Priority Dashboard LWC and its Apex controller.</description>
+
+    <!-- Apex class access -->
+    <classAccesses>
+        <apexClass>ServicePriorityController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ServicePriorityHelper</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+
+    <!-- Object permissions -->
+    <objectPermissions>
+        <allowRead>true</allowRead>
+        <object>WorkOrder</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowRead>true</allowRead>
+        <object>ServiceAppointment</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowRead>true</allowRead>
+        <object>WorkOrderLineItem</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowRead>true</allowRead>
+        <object>Account</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowRead>true</allowRead>
+        <object>Contact</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowRead>true</allowRead>
+        <object>Asset</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowRead>true</allowRead>
+        <object>ConversationEntry</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowRead>true</allowRead>
+        <object>FeedItem</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowRead>true</allowRead>
+        <object>FeedComment</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+
+    <!-- Tab visibility -->
+    <tabSettings>
+        <tab>WorkOrder</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>ServiceAppointment</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+
+    <!-- Field permissions for follow-up fields -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>WorkOrder.Priority_Override__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>WorkOrder.Follow_Up_Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>WorkOrder.Follow_Up_Assigned_To__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+
+    <!-- User permissions for LWC -->
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>AccessLightningExperience</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>AllowViewEditConvertLeads</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>ViewContent</name>
+    </userPermissions>
+
+    <!-- FSL license -->
+    <userLicense>FieldService</userLicense>
+</PermissionSet>

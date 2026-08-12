@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AI_Analysis_Generated_Date__c</fullName>
+    <label>AI Analysis Generated Date</label>
+    <description>Datetime when the AI agent last generated the flag explanation and next steps for this appointment.</description>
+    <required>false</required>
+    <type>DateTime</type>
+</CustomField>

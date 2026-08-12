@@ -1,0 +1,75 @@
+.priority-card {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.5rem;
+    transition: box-shadow 0.15s, border-color 0.15s;
+    cursor: pointer;
+}
+
+.priority-card:hover {
+    border-color: #1b96ff;
+    box-shadow: 0 2px 8px rgba(27, 150, 255, 0.15);
+}
+
+.card-header {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.appt-number {
+    color: #1b96ff;
+    text-decoration: none;
+}
+
+.appt-number:hover {
+    text-decoration: underline;
+}
+
+.separator {
+    color: #c9c9c9;
+    margin: 0 0.5rem;
+}
+
+.account-name {
+    color: #080707;
+}
+
+.meta-row {
+    color: #706e6b;
+    font-size: 0.8125rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.meta-muted {
+    color: #969492;
+}
+
+.summary-text {
+    color: #3e3e3c;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.reason-tag {
+    font-size: 0.75rem;
+}
+
+.reason-tag lightning-badge {
+    --slds-c-badge-color-background: #f3f2f2;
+    --slds-c-badge-text-color: #3e3e3c;
+    max-width: 100%;
+    white-space: normal;
+    text-align: left;
+}
+
+.signal-count {
+    font-size: 0.75rem;
+    color: #706e6b;
+}

@@ -1,0 +1,243 @@
+<template>
+    <div class="dashboard-container">
+        <!-- Header: Date Range Picker + Summary -->
+        <header class="dashboard-header slds-m-bottom_medium">
+            <div class="slds-grid slds-grid_vertical-align-center slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                    <div class="date-range-picker slds-grid slds-grid_vertical-align-center">
+                        <lightning-datepicker
+                            label="Start Date"
+                            value={startDate}
+                            onchange={handleStartDateChange}
+                            date-style="short"
+                            variant="label-hidden"
+                            class="slds-m-right_x-small">
+                        </lightning-datepicker>
+                        <span class="slds-m-horizontal_x-small date-separator">→</span>
+                        <lightning-datepicker
+                            label="End Date"
+                            value={endDate}
+                            onchange={handleEndDateChange}
+                            date-style="short"
+                            variant="label-hidden"
+                            class="slds-m-right_medium">
+                        </lightning-datepicker>
+                        <lightning-button-group>
+                            <lightning-button
+                                label="Yesterday"
+                                onclick={setYesterday}
+                                variant={yesterdayButtonVariant}
+                                class="slds-m-right_x-small">
+                            </lightning-button>
+                            <lightning-button
+                                label="Last 3 Days"
+                                onclick={setLast3Days}
+                                variant={last3ButtonVariant}
+                                class="slds-m-right_x-small">
+                            </lightning-button>
+                            <lightning-button
+                                label="This Week"
+                                onclick={setThisWeek}
+                                variant={thisWeekButtonVariant}>
+                            </lightning-button>
+                        </lightning-button-group>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                    <div class="slds-grid slds-grid_vertical-align-center slds-justify_end">
+                        <lightning-button
+                            label="Refresh"
+                            icon-name="utility:refresh"
+                            onclick={refreshData}
+                            class="slds-m-right_medium">
+                        </lightning-button>
+                        <span class="summary-badge">
+                            <lightning-badge label={summaryLabel}></lightning-badge>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Loading State -->
+        <template if:true={isLoading}>
+            <div class="slds-align_absolute-center slds-m-top_x-large">
+                <lightning-spinner alternative-text="Loading appointments..." size="large">
+                </lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Empty State -->
+        <template if:true={isEmpty}>
+            <div class="empty-state slds-align_absolute-center slds-m-top_x-large">
+                <div class="slds-text-align_center">
+                    <lightning-icon
+                        icon-name="utility:check"
+                        size="large"
+                        variant="success">
+                    </lightning-icon>
+                    <p class="slds-m-top_medium slds-text-heading_medium">
+                        No appointments needing follow-up
+                    </p>
+                    <p class="slds-text-body_regular slds-m-top_small">
+                        All {totalAppointmentCount} appointments from this period were completed successfully.
+                    </p>
+                </div>
+            </div>
+        </template>
+
+        <!-- Priority Sections -->
+        <template if:false={isLoading}>
+            <template if:false={isEmpty}>
+                <!-- Urgent Section -->
+                <section class="priority-section slds-m-bottom_medium">
+                    <div class="priority-header urgent-header"
+                         onclick={toggleUrgent}
+                         role="button"
+                         tabindex="0">
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <lightning-icon icon-name="utility:warning" size="small"></lightning-icon>
+                            <h2 class="slds-m-left_x-small slds-text-heading_small">
+                                Urgent ({urgentCount})
+                            </h2>
+                            <lightning-icon
+                                icon-name={urgentIcon}
+                                size="xx-small"
+                                class="slds-m-left_auto">
+                            </lightning-icon>
+                        </div>
+                    </div>
+                    <template if:true={showUrgent}>
+                        <div class="priority-body">
+                            <template for:each={urgentAppointments} for:item="appt">
+                                <c-priority-card
+                                    key={appt.id}
+                                    appointment={appt}
+                                    analysis={appt.analysis}
+                                    onviewdetails={handleViewDetails}>
+                                </c-priority-card>
+                            </template>
+                        </div>
+                    </template>
+                </section>
+
+                <!-- High Section -->
+                <section class="priority-section slds-m-bottom_medium">
+                    <div class="priority-header high-header"
+                         onclick={toggleHigh}
+                         role="button"
+                         tabindex="0">
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <lightning-icon icon-name="utility:alert" size="small"></lightning-icon>
+                            <h2 class="slds-m-left_x-small slds-text-heading_small">
+                                High ({highCount})
+                            </h2>
+                            <lightning-icon
+                                icon-name={highIcon}
+                                size="xx-small"
+                                class="slds-m-left_auto">
+                            </lightning-icon>
+                        </div>
+                    </div>
+                    <template if:true={showHigh}>
+                        <div class="priority-body">
+                            <template for:each={highAppointments} for:item="appt">
+                                <c-priority-card
+                                    key={appt.id}
+                                    appointment={appt}
+                                    analysis={appt.analysis}
+                                    onviewdetails={handleViewDetails}>
+                                </c-priority-card>
+                            </template>
+                        </div>
+                    </template>
+                </section>
+
+                <!-- Medium Section -->
+                <section class="priority-section slds-m-bottom_medium">
+                    <div class="priority-header medium-header"
+                         onclick={toggleMedium}
+                         role="button"
+                         tabindex="0">
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <lightning-icon icon-name="utility:priority" size="small"></lightning-icon>
+                            <h2 class="slds-m-left_x-small slds-text-heading_small">
+                                Medium ({mediumCount})
+                            </h2>
+                            <lightning-icon
+                                icon-name={mediumIcon}
+                                size="xx-small"
+                                class="slds-m-left_auto">
+                            </lightning-icon>
+                        </div>
+                    </div>
+                    <template if:true={showMedium}>
+                        <div class="priority-body">
+                            <template for:each={mediumAppointments} for:item="appt">
+                                <c-priority-card
+                                    key={appt.id}
+                                    appointment={appt}
+                                    analysis={appt.analysis}
+                                    onviewdetails={handleViewDetails}>
+                                </c-priority-card>
+                            </template>
+                        </div>
+                    </template>
+                </section>
+
+                <!-- Low Section -->
+                <section class="priority-section slds-m-bottom_medium">
+                    <div class="priority-header low-header"
+                         onclick={toggleLow}
+                         role="button"
+                         tabindex="0">
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <lightning-icon icon-name="utility:success" size="small"></lightning-icon>
+                            <h2 class="slds-m-left_x-small slds-text-heading_small">
+                                Low ({lowCount})
+                            </h2>
+                            <lightning-icon
+                                icon-name={lowIcon}
+                                size="xx-small"
+                                class="slds-m-left_auto">
+                            </lightning-icon>
+                        </div>
+                    </div>
+                    <template if:true={showLow}>
+                        <div class="priority-body">
+                            <template for:each={lowAppointments} for:item="appt">
+                                <c-priority-card
+                                    key={appt.id}
+                                    appointment={appt}
+                                    analysis={appt.analysis}
+                                    onviewdetails={handleViewDetails}>
+                                </c-priority-card>
+                            </template>
+                        </div>
+                    </template>
+                </section>
+
+                <!-- Detail Panel (slide-out) -->
+                <template if:true={showDetailPanel}>
+                    <c-detail-panel
+                        appointment={selectedAppointment}
+                        analysis={selectedAnalysis}
+                        onclose={handleClosePanel}>
+                    </c-detail-panel>
+                </template>
+
+                <!-- Error State -->
+                <template if:true={hasError}>
+                    <div class="slds-m-top_medium">
+                        <lightning-alert
+                            variant="error"
+                            title="Error Loading Data"
+                            message={errorMessage}
+                            icon-name="utility:error">
+                        </lightning-alert>
+                    </div>
+                </template>
+            </template>
+        </template>
+    </div>
+</template>
