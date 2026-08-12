@@ -4,6 +4,10 @@ export default class PriorityCard extends LightningElement {
     @api appointment;
     @api analysis;
 
+    get signalTextSuffix() {
+        return this.analysis && this.analysis.signalCount === 1 ? '' : 's';
+    }
+
     get appointmentLink() {
         const saId = this.appointment.id;
         return `/${saId}`;

@@ -5,23 +5,23 @@
             <div class="slds-grid slds-grid_vertical-align-center slds-wrap">
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
                     <div class="date-range-picker slds-grid slds-grid_vertical-align-center">
-                        <lightning-datepicker
+                        <lightning-input
+                            type="date"
                             label="Start Date"
                             value={startDate}
                             onchange={handleStartDateChange}
-                            date-style="short"
                             variant="label-hidden"
                             class="slds-m-right_x-small">
-                        </lightning-datepicker>
+                        </lightning-input>
                         <span class="slds-m-horizontal_x-small date-separator">→</span>
-                        <lightning-datepicker
+                        <lightning-input
+                            type="date"
                             label="End Date"
                             value={endDate}
                             onchange={handleEndDateChange}
-                            date-style="short"
                             variant="label-hidden"
                             class="slds-m-right_medium">
-                        </lightning-datepicker>
+                        </lightning-input>
                         <lightning-button-group>
                             <lightning-button
                                 label="Yesterday"
